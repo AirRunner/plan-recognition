@@ -127,3 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Data
+part1/maps/
+part1/obs/
+part2/bitmapObs/
+part2/bitmapToBitmapObs/
+part2/maps/
+part2/obs/
