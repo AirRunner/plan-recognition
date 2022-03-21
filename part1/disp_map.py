@@ -6,13 +6,17 @@ from time import sleep
 from MS import World
 
 
+# Init Tkinter canvas
+WIDTH, HEIGHT = 64, 64
 window = Tk()
-canvas = Canvas(window, width=64 * 10, height=64 * 10, bg="#000000")
+canvas = Canvas(window, width=WIDTH * 10, height=HEIGHT * 10, bg="#000000")
 canvas.pack()
 
-world = World("CrashSites")
+# Load map
+world = World("Caldera")
 probabilities, real_goals = list(), list()
 
+# Predict for each observation
 for i in range(len(world.observations)):
     # Compute goal probability
     probs = world.predictMastersSardina(world.observations[i])
@@ -21,12 +25,12 @@ for i in range(len(world.observations)):
     probabilities.append(probs)
     real_goals.append(world.goals[argmax(world.labels[i])])
     
-    window.title(f"Best goal probability: {max(probs)}")
+    window.title(f"Goal probability: {max(probs)}")
 
     # Generate map image
-    img = PhotoImage(width=64, height=64)
+    img = PhotoImage(width=WIDTH, height=HEIGHT)
 
-    for x, y in product(range(64), range(64)):
+    for x, y in product(range(WIDTH), range(HEIGHT)):
         if world.grid[x][y] is not None:
             img.put("#FFFFFF", (x, y))
     
@@ -49,11 +53,10 @@ for i in range(len(world.observations)):
     
     # Create image
     img = img.zoom(10, 10)
-    canvas.create_image((64 * 5, 64 * 5), image=img, state="normal")
+    canvas.create_image((WIDTH * 5, HEIGHT * 5), image=img, state="normal")
 
     window.update()
-    sleep(1)
+    sleep(.5)
 
 accuracy = world.accuracy(probabilities, real_goals)
-
-mainloop()
+print(f"Global accuracy for this map: {accuracy}%")
