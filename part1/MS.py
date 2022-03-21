@@ -4,7 +4,7 @@ from datetime import datetime as time
 import random
 from copy import deepcopy
 import math
-np.set_printoptions(threshold=np.nan)
+#np.set_printoptions(threshold=np.nan)
 
 """
 Node class representing a state in the grid and storing information for the A* algorithm
