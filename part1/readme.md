@@ -3,6 +3,8 @@
  Eliott THOMAS --- 21 164 874
  Luca VAIO --- 21 154 698
  
+ 
+ 
 # children
 Cette fonction permet de retourner la liste des noeuds enfants d'un noeud passé en parametre . ... 
 
