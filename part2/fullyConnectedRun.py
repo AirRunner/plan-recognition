@@ -1,8 +1,3 @@
-from keras.layers import Input, Flatten, Concatenate, Dropout, Lambda, Dense, Activation, Multiply, TimeDistributed, MaxPool2D
-from keras.layers.normalization import BatchNormalization
-from keras.models import Sequential, Model
-from keras.optimizers import RMSprop, Adam
-import tensorflow as tf
 import h5py,sys
 import numpy as np
 from datetime import datetime as time
@@ -10,8 +5,6 @@ import matplotlib.pyplot as plt
 import random
 from copy import deepcopy
 import fullyConnected
-
-np.set_printoptions(threshold=np.nan)
 
 #Load obsevations
 print("Loading data...")

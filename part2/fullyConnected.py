@@ -1,40 +1,39 @@
-from keras.layers import Input, Flatten, Concatenate, Dropout, Lambda, Dense, Activation, Multiply, TimeDistributed, MaxPool2D
-from keras.layers.normalization import BatchNormalization
-from keras.models import Sequential, Model
-from keras.optimizers import RMSprop, Adam
-import tensorflow as tf
-import h5py,sys
-import numpy as np
-from datetime import datetime as time
-import matplotlib.pyplot as plt
-import random
-from copy import deepcopy
-
-
 #Use keras functions. Browse documentation to find information.
-class PlanRecognitionModel():
+from tensorflow.python.keras import Sequential
+from tensorflow.python.keras.layers import Flatten
+from tensorflow.python.layers.convolutional import Conv2D
+from tensorflow.python.layers.core import Dropout
+
+
+class PlanRecognitionModel:
 
 	#Build the model architeture with keras layers
 	def __init__(self, shape_input, dim_output):
-		#Add code here
-		self.model = None
+		filter_n = 4
+		filter_input = 4
+		self.model = Sequential(name="model")
+		for _ in range(6):
+			self.model.add(Conv2D(filter_input, filter_n, padding="same", input_shape=8, strides=1, activation="relu"))
+			self.model.add(Dropout(0.1))
+
+		self.model.add(
+			Conv2D(filter_input, filter_n, padding="same", input_shape=shape_input, strides=1, activation="relu"))
+		self.model.add(Dropout(0.1))
+
+		self.model.add(Flatten())
 
 	#Compile the model with keras.
 	def compile(self):
-		#Add code here
-		pass
+		self.model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
 	#Fit the model with keras
-	def fit(self, X, Y):
-		#Add code here
-		return None
+	def fit(self, X, Y, epochs, batch):
+		return self.model.fit(X, Y, epochs=epochs, batch_size=batch, validation_split=0.1)
 
 	#Evaluate the model with keras
 	def evaluate(self, X, Y):
-		#Add code here
-		return None
+		return self.model.evaluate(X,Y)
 
 	#Return a prediction with keras
 	def predict(self,X):
-		#Add code here
-		return None
+		return self.model.predict(X)

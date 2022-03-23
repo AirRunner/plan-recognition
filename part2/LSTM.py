@@ -1,41 +1,22 @@
-from keras.layers import Input, Flatten, Concatenate, Dropout, Softmax, Lambda, Dense, Activation, Multiply, TimeDistributed, MaxPool2D, LSTM
-from keras.layers.normalization import BatchNormalization
-from keras.models import Sequential, Model
-from keras.optimizers import RMSprop, Adam
-from keras.activations import softmax
-import h5py,sys
-import numpy as np
-from datetime import datetime as time
-import matplotlib.pyplot as plt
-import random
-import tensorflow as tf
+from keras.layers import Dense, Activation, LSTM
+from keras.models import Sequential
 
-np.set_printoptions(threshold=np.nan)
 
-#Use keras functions. Browse documentation to find information.
 class PlanRecognitionModel():
+    def __init__(self, shape_input, dim_output, dropout = 0.1, recurrent_dropout = 0.1, units = 10):
+        self.model = Sequential(name="model")
+        self.model.add(LSTM(units=units, input_shape=shape_input, dropout=dropout, recurrent_dropout=recurrent_dropout))
+        self.model.add(Dense(units=dim_output, activation="relu"))
+        self.model.add(Activation("Softmax"))
 
-	#Build the model architeture with keras layers
-	def __init__(self, shape_input, dim_output):
-		#Add code here
-		self.model = None
+    def compile(self):
+        self.model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
-	#Compile the model with keras.
-	def compile(self):
-		#Add code here
-		pass
+    def fit(self, X, Y):
+        return self.model.fit(X, Y, epochs=7, batch_size=200, validation_split=0.1)
 
-	#Fit the model with keras
-	def fit(self, X, Y):
-		#Add code here
-		return None
+    def evaluate(self, X, Y):
+        return self.model.evaluate(X, Y)
 
-	#Evaluate the model with keras
-	def evaluate(self, X, Y):
-		#Add code here
-		return None
-
-	#Return a prediction with keras
-	def predict(self,X):
-		#Add code here
-		return None
+    def predict(self, X):
+        return self.model.predict(X)

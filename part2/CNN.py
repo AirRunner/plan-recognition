@@ -1,38 +1,50 @@
-from keras.layers import Flatten, Dropout, Dense, MaxPool2D, Conv2D, Reshape, Activation
-from keras.layers.normalization import BatchNormalization
-from keras.models import Sequential, Model
-from keras.optimizers import RMSprop, Adam
-from keras.activations import softmax
-import h5py,sys,glob
-import numpy as np
-from datetime import datetime as time
-import random
 import tensorflow as tf
+from tensorflow.python.keras import Sequential
+from tensorflow.python.keras.layers import Dropout, Activation, Conv2D, Flatten, Dense
 
-#Use keras functions. Browse documentation to find information.
+
+
 class PlanRecognitionModel():
-
-	#Build the model architeture with keras layers
 	def __init__(self, shape_input, dim_output):
-		#Add code here
-		self.model = None
+		#Initialization of the neural network
+		filters = shape_input[2]
+		filterSize = 5
+		self.model = Sequential(name="model")
+		self.model.add(Conv2D(filters, filterSize, padding="same", input_shape=shape_input, activation="relu"))
+		self.model.add(Dropout(0.1))
+		#Hidden layers
+		self.model.add(Conv2D(filters, filterSize, padding="same", activation="relu"))
+		self.model.add(Dropout(0.1))
 
-	#Compile the model with keras.
+		self.model.add(Conv2D(filters, filterSize, padding="same", activation="relu"))
+		self.model.add(Dropout(0.1))
+
+		self.model.add(Conv2D(filters, filterSize, padding="same", activation="relu"))
+		self.model.add(Dropout(0.1))
+
+		self.model.add(Conv2D(filters, filterSize, padding="same", activation="relu"))
+		self.model.add(Dropout(0.1))
+
+		self.model.add(Conv2D(filters, filterSize, padding="same", activation="relu"))
+		self.model.add(Dropout(0.1))
+
+		self.model.add(Conv2D(1, filterSize, padding="same", activation="relu"))
+		self.model.add(Dropout(0.1))
+
+		#Output nodes
+		self.model.add(Flatten())
+		self.model.add(Dense(units=dim_output))
+		self.model.add(Activation(tf.nn.softmax))
+
+
 	def compile(self):
-		#Add code here
-		pass
+		self.model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
-	#Fit the model with keras
 	def fit(self, X, Y, epochs, batch):
-		#Add code here
-		return None
+		return self.model.fit(X, Y, epochs=epochs, batch_size=batch, validation_split=0.1)
 
-	#Evaluate the model with keras
 	def evaluate(self, X, Y):
-		#Add code here
-		return None
+		return self.model.evaluate(X,Y)
 
-	#Return a prediction with keras
 	def predict(self,X):
-		#Add code here
-		return None
+		return self.model.predict(X)
