@@ -193,7 +193,7 @@ class World:
             plan_p_g = self.planner(pos, g)
             diff_coss_p_s = len(plan_p_g) - len(plan_s_g)
             proba[i] = np.exp(-diff_coss_p_s) / (1 + np.exp(-diff_coss_p_s))
-        return proba
+        return proba / np.sum(proba)
 
     """
     Parameters :
