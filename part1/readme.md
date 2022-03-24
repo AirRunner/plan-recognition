@@ -17,7 +17,7 @@ Cette fonction prend en paramètre le nœud de départ et le nœud d'arrivée et
 
 ## planner
 
-On applique ici l'algorithme **A***. L'algorithme débute au nœud de départ, puis va explorer les autres nœuds de la carte. Nous stockons ces nœuds dans une file d'attente `PriorityQueue`, dont les nœuds explorés sont supprimés. Les nœuds ajoutés dans cette file d'attente sont triés automatiquement par coût (H+G) grâce à la surcharge de l'opérateur `__gt__`. Le prochain nœud observé sera donc celui dont le coût est le plus faible.
+On applique ici l'algorithme **A***. L'algorithme débute au nœud de départ, puis va explorer les autres nœuds de la carte. Nous stockons ces nœuds dans une file d'attente `PriorityQueue`, dont les nœuds explorés sont supprimés. Il a été choisi d'utiliser une file prioritaire plutôt qu'une simple liste pour des raisons de performances. Les nœuds ajoutés dans cette file d'attente sont triés automatiquement par coût (H+G) grâce à la surcharge de l'opérateur `__gt__`. Le prochain nœud observé sera donc celui dont le coût est le plus faible.
 
 L'algorithme continue tant que cette file n'est pas vide (tant qu'il y a des nœuds à explorer). Si l'on atteint le nœud d'arrivée désiré, on reconstruit le chemin jusqu'au nœud de départ à l'aide des parents de chaque nœud.
 
