@@ -91,15 +91,15 @@ class World:
 
 
 
-    """
-    Parameters :
-        node, an instance of the Node class
-    Returns :
-        The children of node in the grid (ie the next positions at the left, top, right and bottom after taking a step)
-        They must be legal positions (ie not walls or positions outside the map)
-    """
 
     def children(self, node):
+        """
+        Parameters :
+            node, an instance of the Node class
+        Returns :
+            The children of node in the grid (ie the next positions at the left, top, right and bottom after taking a step)
+            They must be legal positions (ie not walls or positions outside the map)
+        """
         children = []
         l = len(self.grid) - 1
         for x, y in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
@@ -114,27 +114,18 @@ class World:
             children.append(self.grid[nx][ny])
         return children
 
-    """
-    Parameters :
-        2 nodes that are not None
-    Returns :
-        A heuristic function that can be used to estimate the cost of the optimal paths between start and goal
-    """
 
     def heuristic(self, start, goal):
+        """
+        Parameters :
+            2 nodes that are not None
+        Returns :
+            A heuristic function that can be used to estimate the cost of the optimal paths between start and goal
+        """
         abs1 = abs(goal.point[1] - start.point[1])
         abs0 = abs(goal.point[0] - start.point[0])
         return abs1 + abs0
 
-    """
-    Parameters :
-        start, the start node
-        goal, the goal node
-    Returns :
-        The optimal list of nodes from the start to the goal (each cost is 1, so the optimal path can be assumed to be the shortest one)
-        So to get the cost of the total path, just use the len() function on the result
-        If no path is found, the function returns []
-    """
 
     @staticmethod
     def list_node(node):
@@ -147,6 +138,15 @@ class World:
         return r
 
     def planner(self, start: Node, goal: Node):
+        """
+        Parameters :
+            start, the start node
+            goal, the goal node
+        Returns :
+            The optimal list of nodes from the start to the goal (each cost is 1, so the optimal path can be assumed to be the shortest one)
+            So to get the cost of the total path, just use the len() function on the result
+            If no path is found, the function returns []
+        """
         for i in range(len(self.grid)):
             for j in range(len(self.grid[0])):
                 if self.grid[i][j] is not None:
@@ -174,16 +174,16 @@ class World:
         print("Planner warning : no path found. Returning []")
         return []
 
-    """
-    Parameters :
-        pos, the agent position [x,y] in the grid
-    Returns :
-        The posterior probability distribution as defined with the algorithm in the pdf file. It is important to return a list that is in the same order as self.goals
-    Tips :
-        You should use : self.start, self.goals and the functions you filled
-    """
 
     def predictMastersSardina(self, pos):
+        """
+        Parameters :
+            pos, the agent position [x,y] in the grid
+        Returns :
+            The posterior probability distribution as defined with the algorithm in the pdf file. It is important to return a list that is in the same order as self.goals
+        Tips :
+            You should use : self.start, self.goals and the functions you filled
+        """
         proba = np.zeros(len(self.goals))
         pos.point = list(pos.point)
         self.start.point = list(self.start.point)
@@ -195,24 +195,24 @@ class World:
             proba[i] = np.exp(-diff_coss_p_s) / (1 + np.exp(-diff_coss_p_s))
         return proba / np.sum(proba)
 
-    """
-    Parameters :
-        probabilities, a list of posterior probability distributions (returned by predictMastersSardina). It is thus a list of list.
-        true_goals, a list of the true goals sought by the agent, in the same order as probabilities
-
-        For instance, if :
-        probabilities[0] = [0.5, 0.2, 0.2, 0.1, 0.0]
-        true_goals[0] = [50,62]
-        self.goals = [[50,62],[100,20],[10,25],[30,0],[82,67]]
-        then it is a correct prediction.
-    Returns :
-        The accuracy, which is a percentage from 0 to 100, representing the ratio of correct predictions. The formula is given in the pdf file.
-        /!\ Be careful and read the pdf instrutions regarding probability ties.
-    Tips :
-        You should use : self.goals
-    """
 
     def accuracy(self, probabilities, true_goals):
+        """
+        Parameters :
+            probabilities, a list of posterior probability distributions (returned by predictMastersSardina). It is thus a list of list.
+            true_goals, a list of the true goals sought by the agent, in the same order as probabilities
+
+            For instance, if :
+            probabilities[0] = [0.5, 0.2, 0.2, 0.1, 0.0]
+            true_goals[0] = [50,62]
+            self.goals = [[50,62],[100,20],[10,25],[30,0],[82,67]]
+            then it is a correct prediction.
+        Returns :
+            The accuracy, which is a percentage from 0 to 100, representing the ratio of correct predictions. The formula is given in the pdf file.
+            /!\ Be careful and read the pdf instrutions regarding probability ties.
+        Tips :
+            You should use : self.goals
+        """
         cor = 0
         for i in range(len(probabilities)):
             cp = probabilities[i]
