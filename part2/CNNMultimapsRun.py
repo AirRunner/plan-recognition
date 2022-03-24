@@ -2,6 +2,7 @@ import h5py, glob
 import numpy as np
 from datetime import datetime as time
 import CNNMultimaps
+from save import save_results
 
 # Load obsevations
 print("Loading data...")
@@ -79,3 +80,5 @@ for i in range(4):
 print("###############################################")
 print(result)
 print("")
+
+save_results(result, "CNNMultimaps")

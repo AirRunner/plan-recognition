@@ -1,10 +1,9 @@
-import h5py,sys
+import h5py
 import numpy as np
 from datetime import datetime as time
-import matplotlib.pyplot as plt
 import random
-from copy import deepcopy
 import fullyConnected
+from save import save_results
 
 #Load obsevations
 print("Loading data...")
@@ -79,13 +78,14 @@ model = fullyConnected.PlanRecognitionModel(trainX[0].shape, trainY.shape[1])
 model.compile()
 
 tStart = time.now()
-model.fit(trainX, trainY)
+model.fit(trainX, trainY, 10, 10)
 tEnd = time.now()
 c = tEnd - tStart
 
 print("Training time : " + str(c.microseconds) + " microseconds")
 
 print("####### Testing shuffle #######")
+result = list()
 for i in range(len(percentageSubPathTest)):
 	perm = np.random.permutation(len(testsX[i]))
 	testX,testY = np.array(testsX[i])[perm],np.array(testsY[i])[perm]
@@ -93,8 +93,11 @@ for i in range(len(percentageSubPathTest)):
 	scores = model.evaluate(testX,testY)
 	if scores is not None:
 		print("Accuracy, from "+ str(percentageSubPathTest[i][0]*100) +"% to "+ str(percentageSubPathTest[i][1]*100) +"% : " + str(scores[1]*100) + " %")
+		result.append(scores[1]*100)
 	else:
 		print("Evaluation function not implemented")
 
 print("###############################################")
 print("")
+
+save_results(result, "FC")

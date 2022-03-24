@@ -3,7 +3,9 @@ import numpy as np
 from datetime import datetime as time
 import random
 import LSTM
-from save import save_results
+import json
+from os import path
+from MS import World, Node
 
 # Load obsevations
 print("Loading data...")
@@ -24,24 +26,8 @@ percentageSubPathTest = [[0, 0.25], [0, 0.5], [0, 0.75], [0, 1]]
 sizeOfSubset = 10
 
 print("Processing data:")
-trainX = []
-trainY = []
 testsX = []
 testsY = []
-# Training set
-print("Training set...")
-for i in range(len(obs)):
-    print(str(i) + "/" + str(len(obs)) + "    ", end="\r")
-    o = obs[i]
-    for k in range(nbSubsetPerPath):
-        # Train
-        subPath = o[int(percentageSubPathTrain[0] * len(o)):int(percentageSubPathTrain[1] * len(o))]
-        if (len(subPath) >= sizeOfSubset):
-            sample = []
-            for index in sorted(random.sample(range(len(subPath)), sizeOfSubset)):
-                sample.append([subPath[index][0], subPath[index][1]])
-            trainX.append(sample)
-            trainY.append(labels[i])
 
 # Testing set
 print("Testing set...")
@@ -62,45 +48,45 @@ for interval in percentageSubPathTest:
     testsX.append(testX)
     testsY.append(testY)
 
-trainX = np.array(trainX)
-trainY = np.array(trainY)
-
-print("Input shape : " + str(trainX.shape))
-print("Output shape : " + str(trainY.shape))
-
-print("####### Training shuffle #######")
-
-# Random shuffle
-perm = np.random.permutation(trainX.shape[0])
-trainX, trainY = trainX[perm], trainY[perm]
-
-
-model = LSTM.PlanRecognitionModel(trainX[0].shape, trainY.shape[1])
-model.compile()
-
-tStart = time.now()
-model.fit(trainX, trainY)
-tEnd = time.now()
-c = tEnd - tStart
-
-print("Training time : " + str(c.microseconds) + " microseconds")
-
 print("####### Testing shuffle #######")
+m = "Enigma"
+print("Computing accuracy for map " + m + "...\r",end='')
+world = World(m)
+
 result = []
 for i in range(len(percentageSubPathTest)):
     perm = np.random.permutation(len(testsX[i]))
     testX, testY = np.array(testsX[i])[perm], np.array(testsY[i])[perm]
-    # Assess network accuracy score with test set
-    scores = model.evaluate(testX, testY)
-    if scores is not None:
-        result.append(scores[1] * 100)
-        print("Accuracy, from " + str(percentageSubPathTest[i][0] * 100) + "% to " + str(
-            percentageSubPathTest[i][1] * 100) + "% : " + str(scores[1] * 100) + " %")
-    else:
-        print("Evaluation function not implemented")
+    testX = testX[:500]
+    testX_shape = testX.shape[0]
+    res = 0
+    
+    for j in range(testX_shape):
+        last_position = testX[j, -1]
+        probas = world.predictMastersSardina(Node(last_position))
+        res += int(probas[np.argmax(testY[j])] == max(probas))
+    
+    result.append(res / testX_shape * 100)
+
 print(result)
+
+
+results_file = "results.json"
+if path.isfile(results_file):
+    with open(results_file, 'r') as jean_michel_fichier:
+        result_dict = json.load(jean_michel_fichier)
+else:
+    result_dict = dict()
+
+result_dict["MS"] = {
+    "0-25": result[0],
+    "0-50": result[1],
+    "0-75": result[2],
+    "0-100": result[3]
+}
+
+with open(results_file, 'w') as jean_michel_fichier:
+    json.dump(result_dict, jean_michel_fichier, indent=4)
 
 print("###############################################")
 print("")
-
-save_results(result, "LSTM")

@@ -4,7 +4,7 @@ from datetime import datetime as time
 import random
 import tensorflow as tf
 import CNN
-
+from save import save_results
 
 
 # Load obsevations
@@ -45,11 +45,13 @@ print("Training time : " + str(c.microseconds) + " microseconds")
 
 print("####### Testing shuffle #######")
 
+result = list()
 perm = np.random.permutation(len(testX25))
 testX, testY = np.array(testX25)[perm], np.array(testY25)[perm]
 # Assess network accuracy score with test set
 scores = model.evaluate(testX25, testY25)
 if scores is not None:
+    result.append(scores[1] * 100)
     print("Accuracy, from 0% to 25% : " + str(scores[1] * 100) + " %")
 else:
     print("Evaluation function not implemented")
@@ -59,6 +61,7 @@ testX, testY = np.array(testX50)[perm], np.array(testY50)[perm]
 # Assess network accuracy score with test set
 scores = model.evaluate(testX50, testY50)
 if scores is not None:
+    result.append(scores[1] * 100)
     print("Accuracy, from 0% to 50% : " + str(scores[1] * 100) + " %")
 else:
     print("Evaluation function not implemented")
@@ -68,6 +71,7 @@ testX, testY = np.array(testX75)[perm], np.array(testY75)[perm]
 # Assess network accuracy score with test set
 scores = model.evaluate(testX75, testY75)
 if scores is not None:
+    result.append(scores[1] * 100)
     print("Accuracy, from 0% to 75% : " + str(scores[1] * 100) + " %")
 else:
     print("Evaluation function not implemented")
@@ -77,9 +81,12 @@ testX, testY = np.array(testX100)[perm], np.array(testY100)[perm]
 # Assess network accuracy score with test set
 scores = model.evaluate(testX100, testY100)
 if scores is not None:
+    result.append(scores[1] * 100)
     print("Accuracy, from 0% to 100% : " + str(scores[1] * 100) + " %")
 else:
     print("Evaluation function not implemented")
 
 print("###############################################")
 print("")
+
+save_results(result, "CNN")
