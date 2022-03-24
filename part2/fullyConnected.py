@@ -1,26 +1,26 @@
 #Use keras functions. Browse documentation to find information.
 from tensorflow.python.keras import Sequential
-from tensorflow.python.keras.layers import Flatten
-from tensorflow.python.layers.convolutional import Conv2D
-from tensorflow.python.layers.core import Dropout
+from tensorflow.python.keras.layers import Flatten, Activation, Dense, Dropout
 
 
 class PlanRecognitionModel:
 
 	#Build the model architeture with keras layers
 	def __init__(self, shape_input, dim_output):
-		filter_n = 4
-		filter_input = 4
+		#Initialization of the neural network
 		self.model = Sequential(name="model")
-		for _ in range(6):
-			self.model.add(Conv2D(filter_input, filter_n, padding="same", input_shape=8, strides=1, activation="relu"))
-			self.model.add(Dropout(0.1))
-
-		self.model.add(
-			Conv2D(filter_input, filter_n, padding="same", input_shape=shape_input, strides=1, activation="relu"))
+		self.model.add(Dense(units=20, input_shape=shape_input, activation="relu"))
 		self.model.add(Dropout(0.1))
-
 		self.model.add(Flatten())
+		#Hidden layers
+		self.model.add(Dense(units=20, activation="relu"))
+		self.model.add(Dropout(0.1))
+		self.model.add(Dense(units=10, activation="relu"))
+		self.model.add(Dropout(0.1))
+		#Output node
+		self.model.add(Dense(units=dim_output, activation="relu"))
+		self.model.add(Activation("softmax"))
+
 
 	#Compile the model with keras.
 	def compile(self):
