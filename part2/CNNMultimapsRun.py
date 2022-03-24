@@ -55,11 +55,11 @@ trainX, trainY = np.array(trainX)[perm], np.array(trainY)[perm]
 print("Input shape : " + str(trainX.shape))
 print("Output shape : " + str(trainY.shape))
 
-model = CNNMultimaps.PlanRecognitionModel(trainX[0].shape, trainY.shape[1])
+model = CNNMultimaps.PlanRecognitionModel(trainX[0].shape, trainY.shape[1],alpha=10)
 model.compile()
 
 tStart = time.now()
-model.fit(trainX, trainY, 10,10)
+model.fit(trainX, trainY, 10, 10)
 tEnd = time.now()
 c = tEnd - tStart
 

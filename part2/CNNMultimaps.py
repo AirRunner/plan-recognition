@@ -5,9 +5,9 @@ from keras.models import Sequential, Model
 
 
 class PlanRecognitionModel():
-    def __init__(self, shape_input, dim_output):
+    def __init__(self, shape_input, dim_output,alpha):
         kernel_size = 8
-        channels = shape_input[2]
+        channels = shape_input[2]*alpha
         self.model = keras.Sequential([
             Conv2D(input_dim=channels, filters=channels, kernel_size=kernel_size, input_shape=shape_input,
                    padding="same", activation="relu"),
